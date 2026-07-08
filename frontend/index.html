@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriSystem — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="logo">
+        <h1>Nutri<span>System</span></h1>
+        <p>Gestão inteligente para nutricionistas</p>
+      </div>
+
+      <div id="error-message" class="error-message"></div>
+
+      <form onsubmit="entrar(event)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Sua senha" autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+      </form>
+
+      <div class="footer-link">
+        Não tem conta? <a href="cadastro.html">Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

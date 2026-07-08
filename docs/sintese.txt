@@ -1,0 +1,76 @@
+Qual vai ser o sistema?
+
+O sistema que a gente vai construir hoje é um software completo de gestão para nutricionistas. Um sistema web que
+que qualquer nutricionista acessa pelo navegador, cadastra seus pacientes, registra consultas, acompanha a evolução
+de peso em gráficos e tem tudo organizado num só lugar - sem papel, sem planilhas, sem caos. 
+
+E a cereja do bolo - com um único clique, a inteligenciência artificial lê todos os dados dos pacientes automaticamente
+e gera um plano alimentar completo e personalizado em segundos.
+
+Com 5 opções de refeições para cada refeição do dia, já respeintando as restrições, alergias e objetivos de cada paciente.
+Esse é o tipo de funcionalidade  que transforma um sistema simples num produto pela qual proficionais pagam mensalidande
+sem pensar duas vezes.
+
+aqui está tudo que foi definido pelas 3 abas:
+---
+## aba 1 -> Pessoal
+
+- Nome Completo 
+- Data de nascimento(sistema calcula a idade automaticamente)
+- Sexo(Masculino, Feminino, Outro)
+- Telefone
+- WhatsApp
+- Email
+
+---
+##Aba 2 -> Clínico
+
+- Peso Atual (KG)
+- Altura (CM)
+- IMC (calculado automaticamente,só leitura)
+- Objetivo (múltipla escolha:Emagrecer,Ganhar massa, Controlar diabetes, Saúde geral,
+Performance esportiva, Reeducação alimentar +  texto livre adicional)
+- Nível de atividade física(seleção única: Sedentário, Levenmente ativo, Moderadamente ativo,
+Muito ativo, Extremamente ativo)
+- Patologias (múltipla escolha + opção "Nenhuma" + campo livre)
+- Restrições Alimentares (múltipla escolha + opção "Nenhuma" + campo livre)
+- Alergias alimentares (múltipla escolha + opção "Nenhuma" + campo livre)
+- Medicamentos contínuos(texto livre)
+- Suplmentos em uso(texto livre)
+
+---
+##aba 3 -> Habitos
+
+- Quantas refeições faz por dia (número)
+- Horário que acorda (número - converte automaticamente para hora)
+- Horário que dorme (número - converte automaticamente para hora)
+- Quantidade de água por dia (litros)
+- Pratica atividade física (sim/não - se sim, abre compo:qual e frequência)
+- Observações gerais(texto livre)
+
+---
+
+estrutura de prompts:
+---
+
+## 1
+
+Antes de construir qualquer coisa, precisamos preparar a fundação do sistema. O
+Prompt é responsável por criar toda a estrutura do banco de dados no Supabase - que é onde
+todas as informações do sistema vão ser armazenadas. Pensa assim: se o sistema fosse uma casa,
+o banco de dados seria a fundação. Sem ela, nada se sustenta.
+
+Nesse prompt, isntruímos o Antigravity a criar 4 tabelas essenciais:a tabela de nutricionistas, a de pacientes, a de consultas e a planos alimentares. Cada uma dessas tabelas tem seus campos específicos e estão todos conectados entre si - por exemplo, 
+cada paciente pertence a uma nutricionista, cada consulta pertence a um paciente. Essa conexão
+entre as tabelas é o que garante que p sistema funcione de forma inteligente e organizada.
+
+Alem disso, o prompt já aticva uma camada de segurança chamada RLS - Row Level Security. Ela garante que cada nutricionista acesse apenas os próprios dados, sem conseguir ver os dados de outra profissional que use o mesmo sistema.
+
+É uma proteção fundamental para qualquer sistema que lida com informações de pacientes. E tudo isso é feito diretamente pelo Antigravity via MCP(Model Context Protocol), sem precisar copiar ou colar nenhum código manualmente.
+
+
+## 2
+
+Com o banco de dados pronto, próximo passo é a porta de entrada do sistema - atenticação. O prompt 2 é responsavel por construir as telas de login e cadastro da nutricionista. É aqui que ela cria a sua conta com email e senha e, nas próxmas vezes, estra diretamente no sistema com essas credenciais. 
+
+A autenticação é feita pela própria Supabase, que já tem esse 

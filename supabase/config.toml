@@ -1,0 +1,23 @@
+[project]
+ref = "ocyabbrncokgtahaqqkv"
+name = "nutricionista-sistema"
+
+[api]
+port = 54321
+schemas = ["public"]
+
+[db]
+major_version = 15
+
+[db.pooler]
+enabled = false
+
+[auth]
+enabled = false
+
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+
+[analytics]
+enabled = false

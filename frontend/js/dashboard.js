@@ -1,7 +1,7 @@
 let currentUser = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = "index.html";
     return;
@@ -19,7 +19,7 @@ async function carregarDashboard() {
 }
 
 async function carregarTotalPacientes() {
-  const { count, error } = await supabase
+  const { count, error } = await supabaseClient
     .from("pacientes")
     .select("*", { count: "exact", head: true })
     .eq("nutricionista_id", currentUser.id);
@@ -43,7 +43,7 @@ async function carregarConsultasSemana() {
 
   const fmt = (d) => d.toISOString().split("T")[0];
 
-  const { count, error } = await supabase
+  const { count, error } = await supabaseClient
     .from("consultas")
     .select("*", { count: "exact", head: true })
     .gte("data_consulta", fmt(segunda))
@@ -58,7 +58,7 @@ async function carregarPacientesSemRetorno() {
   const lista = document.getElementById("lista-sem-retorno");
   const vazio = document.getElementById("sem-retorno-vazio");
 
-  const { data, error } = await supabase.rpc("get_pacientes_sem_retorno");
+  const { data, error } = await supabaseClient.rpc("get_pacientes_sem_retorno");
 
   if (error) {
     console.error("Erro ao carregar pacientes sem retorno:", error);
@@ -90,6 +90,6 @@ async function carregarPacientesSemRetorno() {
 }
 
 async function sair() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = "index.html";
 }

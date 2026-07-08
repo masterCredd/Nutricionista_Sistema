@@ -2,7 +2,7 @@ let currentUser = null;
 let todosPacientes = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = "index.html"; return; }
   currentUser = session.user;
   await carregarPacientes();
@@ -13,7 +13,7 @@ document.getElementById("busca")?.addEventListener("input", (e) => {
 });
 
 async function carregarPacientes() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("pacientes")
     .select("id, nome, objetivos, created_at")
     .eq("nutricionista_id", currentUser.id)
@@ -24,7 +24,7 @@ async function carregarPacientes() {
   todosPacientes = data || [];
 
   for (const p of todosPacientes) {
-    const { data: cons } = await supabase
+    const { data: cons } = await supabaseClient
       .from("consultas")
       .select("data_consulta")
       .eq("paciente_id", p.id)

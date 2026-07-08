@@ -1,5 +1,5 @@
 async function verificarSessao() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     const path = window.location.pathname;
     if (path.endsWith("index.html") || path.endsWith("/") || path.endsWith("cadastro.html")) {
@@ -37,7 +37,7 @@ async function cadastrar(event) {
   }
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: { data: { nome } },
@@ -49,7 +49,7 @@ async function cadastrar(event) {
     }
 
     if (data.user) {
-      const { error: insertError } = await supabase
+      const { error: insertError } = await supabaseClient
         .from("nutricionistas")
         .insert({
           id: data.user.id,
@@ -59,12 +59,15 @@ async function cadastrar(event) {
 
       if (insertError) {
         console.error("Erro ao salvar nutricionista:", insertError);
+        exibirErro(obterMensagemErro(insertError.message));
+        return;
       }
     }
 
     window.location.href = "dashboard.html";
   } catch (err) {
-    exibirErro("Erro inesperado. Tente novamente.");
+    console.error("Erro inesperado no cadastro:", err);
+    exibirErro(obterMensagemErro(err.message || "Erro inesperado. Tente novamente."));
   }
 }
 
@@ -83,7 +86,7 @@ async function entrar(event) {
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -95,12 +98,13 @@ async function entrar(event) {
 
     window.location.href = "dashboard.html";
   } catch (err) {
-    exibirErro("Erro inesperado. Tente novamente.");
+    console.error("Erro inesperado no login:", err);
+    exibirErro(obterMensagemErro(err.message || "Erro inesperado. Tente novamente."));
   }
 }
 
 async function sair() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = "index.html";
 }
 

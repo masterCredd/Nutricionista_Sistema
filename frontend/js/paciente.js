@@ -6,7 +6,7 @@ let planosData = [];
 let chartInstance = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = "index.html"; return; }
   currentUser = session.user;
 
@@ -31,7 +31,7 @@ function initTabs() {
 }
 
 async function carregarPaciente() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("pacientes")
     .select("*")
     .eq("id", pacienteId)
@@ -139,7 +139,7 @@ async function salvarPaciente() {
     observacoes: document.getElementById("edit-observacoes").value || null,
   };
 
-  const { error } = await supabase.from("pacientes").update(payload).eq("id", pacienteId);
+  const { error } = await supabaseClient.from("pacientes").update(payload).eq("id", pacienteId);
 
   if (error) {
     alert("Erro ao salvar: " + error.message);
@@ -154,7 +154,7 @@ async function salvarPaciente() {
 // === CONSULTAS ===
 
 async function carregarConsultas() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("consultas")
     .select("*")
     .eq("paciente_id", pacienteId)
@@ -303,7 +303,7 @@ async function salvarConsulta() {
     proximo_retorno: document.getElementById("consulta-retorno").value || null,
   };
 
-  const { error } = await supabase.from("consultas").insert(consulta);
+  const { error } = await supabaseClient.from("consultas").insert(consulta);
 
   if (error) {
     document.getElementById("modal-erro").textContent = "Erro ao salvar: " + error.message;
@@ -318,7 +318,7 @@ async function salvarConsulta() {
 // === PLANOS ===
 
 async function carregarPlanos() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("planos_alimentares")
     .select("*")
     .eq("paciente_id", pacienteId)
@@ -384,7 +384,7 @@ async function gerarPlano() {
   container.innerHTML = "";
 
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) throw new Error("Sessão expirada");
 
     const response = await fetch(
@@ -464,7 +464,7 @@ function renderizarPlanoGerado(plano) {
 async function salvarPlano() {
   if (!planoAtual) return;
 
-  const { error } = await supabase.from("planos_alimentares").insert({
+  const { error } = await supabaseClient.from("planos_alimentares").insert({
     paciente_id: pacienteId,
     conteudo: planoAtual,
   });

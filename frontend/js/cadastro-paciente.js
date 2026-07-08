@@ -1,7 +1,7 @@
 let currentUser = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = "index.html"; return; }
   currentUser = session.user;
 
@@ -106,7 +106,7 @@ async function salvarPaciente(event) {
     observacoes: document.getElementById("observacoes").value || null,
   };
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("pacientes")
     .insert(paciente)
     .select("id")

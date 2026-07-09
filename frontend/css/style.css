@@ -45,6 +45,9 @@
   --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.06);
   --shadow-toast: 0 4px 16px rgba(46, 125, 50, 0.3);
   --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
+  --bg-gradient-1: #f0faf0;
+  --bg-gradient-2: #e8f5e9;
+  --bg-gradient-3: #f1f8e9;
 }
 
 [data-theme="dark"] {
@@ -54,7 +57,6 @@
   --bg-input: #1e2230;
   --bg-input-focus: #262b3a;
   --bg-disabled: #1e2230;
-  --bg-sidebar: #141720;
   --bg-sidebar: #141720;
   --bg-planos: #1a1d27;
   --bg-avatar: #1b3320;

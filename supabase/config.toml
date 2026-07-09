@@ -1,7 +1,3 @@
-[project]
-ref = "ocyabbrncokgtahaqqkv"
-name = "nutricionista-sistema"
-
 [api]
 port = 54321
 schemas = ["public"]

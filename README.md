@@ -3,6 +3,8 @@
 > Sistema de Gestão para Nutricionistas com IA
 > Versão: 1.0.0 | Supabase + Edge Functions + Claude AI
 
+**Produção:** https://frontend-rouge-xi-55.vercel.app
+
 ---
 
 ## 1. VISÃO GERAL
@@ -505,6 +507,7 @@ git push
 ## 10. CONTATO E SUPORTE
 
 - **Repositório**: https://github.com/masterCredd/Nutricionista_Sistema
+- **Frontend em produção**: https://frontend-rouge-xi-55.vercel.app
 - **Supabase Dashboard**: https://supabase.com/dashboard/project/ocyabbrncokgtahaqqkv
 - **Projeto**: Nutricionista_Sistema (ref: `ocyabbrncokgtahaqqkv`)
 - **Região**: sa-east-1 (São Paulo)

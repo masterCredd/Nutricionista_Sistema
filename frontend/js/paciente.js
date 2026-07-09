@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTabs();
   await carregarPaciente();
   await Promise.all([carregarConsultas(), carregarPlanos()]);
+
+  document.getElementById("btn-gerar-plano")?.addEventListener("click", gerarPlano);
 });
 
 function initTabs() {
@@ -352,20 +354,7 @@ function renderizarPlanos() {
   });
 }
 
-function visualizarPlano(plano) {
-  const overlay = document.getElementById("plano-overlay");
-  const content = document.getElementById("plano-content");
 
-  const data = new Date(plano.created_at).toLocaleDateString("pt-BR");
-  content.innerHTML = `
-    <div class="plano-header">
-      <h3>Plano Alimentar — ${data}</h3>
-      <button class="btn btn-outline" onclick="fecharPlano()" style="padding: 6px 16px;">Fechar</button>
-    </div>
-    <pre class="plano-body">${JSON.stringify(plano.conteudo, null, 2)}</pre>
-  `;
-  overlay.style.display = "flex";
-}
 
 function fecharPlano() {
   document.getElementById("plano-overlay").style.display = "none";
@@ -374,9 +363,11 @@ function fecharPlano() {
 let planoAtual = null;
 
 async function gerarPlano() {
-  const btn = document.querySelector('[onclick="gerarPlano()"]');
+  const btn = document.getElementById("btn-gerar-plano");
   const container = document.getElementById("plano-gerado");
   const loading = document.getElementById("plano-loading");
+
+  if (!btn) return;
 
   btn.disabled = true;
   btn.textContent = "Gerando...";
@@ -385,23 +376,49 @@ async function gerarPlano() {
 
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) throw new Error("Sessão expirada");
+    if (!session) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    if (!pacienteData) {
+      throw new Error("Dados do paciente não carregados");
+    }
 
     const response = await fetch(
-      "https://ocyabbrncokgtahaqqkv.supabase.co/functions/v1/gerar-plano",
+      `${SUPABASE_URL}/functions/v1/gerar-plano`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify(pacienteData),
+        body: JSON.stringify({
+          nome: pacienteData.nome,
+          data_nascimento: pacienteData.data_nascimento,
+          peso_inicial: pacienteData.peso_inicial,
+          altura: pacienteData.altura,
+          objetivos: pacienteData.objetivos,
+          objetivo_texto: pacienteData.objetivo_texto,
+          nivel_atividade: pacienteData.nivel_atividade,
+          patologias: pacienteData.patologias,
+          restricoes_alimentares: pacienteData.restricoes_alimentares,
+          alergias: pacienteData.alergias,
+          refeicoes_por_dia: pacienteData.refeicoes_por_dia,
+          horario_acorda: pacienteData.horario_acorda,
+          horario_dorme: pacienteData.horario_dorme,
+          suplementos: pacienteData.suplementos,
+        }),
       },
     );
 
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.erro || "Erro ao gerar plano");
+      let errMsg = "Erro ao gerar plano com IA.";
+      try {
+        const err = await response.json();
+        errMsg = err.erro || errMsg;
+      } catch (_) { }
+      throw new Error(errMsg);
     }
 
     planoAtual = await response.json();
@@ -410,8 +427,10 @@ async function gerarPlano() {
     alert("Erro ao gerar plano: " + err.message);
   } finally {
     loading.style.display = "none";
-    btn.disabled = false;
-    btn.textContent = "+ Gerar Plano Alimentar";
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "+ Gerar Plano Alimentar";
+    }
   }
 }
 
@@ -461,16 +480,31 @@ function renderizarPlanoGerado(plano) {
   });
 }
 
+let salvandoPlano = false;
+
 async function salvarPlano() {
-  if (!planoAtual) return;
+  if (!planoAtual || salvandoPlano) return;
+  salvandoPlano = true;
+
+  const btn = document.querySelector('.plano-actions .btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Salvando...";
+  }
 
   const { error } = await supabaseClient.from("planos_alimentares").insert({
     paciente_id: pacienteId,
     conteudo: planoAtual,
   });
 
+  salvandoPlano = false;
+
   if (error) {
     alert("Erro ao salvar plano: " + error.message);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Salvar Plano";
+    }
     return;
   }
 

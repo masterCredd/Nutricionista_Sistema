@@ -1099,3 +1099,46 @@ body:not(:has(.layout-dashboard)) {
   justify-content: center;
   padding-top: 8px;
 }
+
+/* Paginação */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 24px 0 8px;
+}
+
+.pag-btn {
+  min-width: 36px;
+  height: 36px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.pag-btn:hover:not(:disabled) {
+  border-color: #4caf50;
+  color: #2e7d32;
+  background: #f0fdf4;
+}
+
+.pag-btn.active {
+  background: #2e7d32;
+  color: #ffffff;
+  border-color: #2e7d32;
+}
+
+.pag-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -1,5 +1,9 @@
 let currentUser = null;
 let todosPacientes = [];
+let paginaAtual = 1;
+const ITENS_POR_PAGINA = 20;
+let totalPacientes = 0;
+let filtroBusca = "";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -9,45 +13,48 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 document.getElementById("busca")?.addEventListener("input", (e) => {
-  filtrarPacientes(e.target.value);
+  filtroBusca = e.target.value;
+  paginaAtual = 1;
+  carregarPacientes();
 });
 
 async function carregarPacientes() {
-  const { data, error } = await supabaseClient
-    .from("pacientes")
-    .select("id, nome, objetivos, created_at")
-    .eq("nutricionista_id", currentUser.id)
-    .order("nome");
+  const container = document.getElementById("lista-pacientes");
+  const vazio = document.getElementById("lista-vazia");
+  container.innerHTML = "";
 
-  if (error) { console.error(error); return; }
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "listar_pacientes_com_ultima_consulta",
+      {
+        p_limit: ITENS_POR_PAGINA,
+        p_offset: (paginaAtual - 1) * ITENS_POR_PAGINA,
+        p_busca: filtroBusca,
+      }
+    );
 
-  todosPacientes = data || [];
+    if (error) throw error;
 
-  for (const p of todosPacientes) {
-    const { data: cons } = await supabaseClient
-      .from("consultas")
-      .select("data_consulta")
-      .eq("paciente_id", p.id)
-      .order("data_consulta", { ascending: false })
-      .limit(1);
-    p.ultima_consulta = cons?.length > 0 ? cons[0].data_consulta : null;
+    if (!data || data.length === 0) {
+      vazio.style.display = "block";
+      document.getElementById("paginacao")?.remove();
+      return;
+    }
+
+    vazio.style.display = "none";
+    totalPacientes = data[0].total_count;
+    renderizarPacientes(data);
+    renderizarPaginacao();
+  } catch (err) {
+    console.error("Erro ao carregar pacientes:", err);
+    vazio.style.display = "block";
+    vazio.textContent = "Erro ao carregar pacientes. Tente novamente.";
   }
-
-  renderizarPacientes(todosPacientes);
 }
 
 function renderizarPacientes(lista) {
   const container = document.getElementById("lista-pacientes");
-  const vazio = document.getElementById("lista-vazia");
-
   container.innerHTML = "";
-
-  if (lista.length === 0) {
-    vazio.style.display = "block";
-    return;
-  }
-
-  vazio.style.display = "none";
 
   lista.forEach((p) => {
     const objetivo =
@@ -74,13 +81,64 @@ function renderizarPacientes(lista) {
   });
 }
 
-function filtrarPacientes(termo) {
-  if (!termo) {
-    renderizarPacientes(todosPacientes);
+function renderizarPaginacao() {
+  const totalPaginas = Math.ceil(totalPacientes / ITENS_POR_PAGINA);
+  if (totalPaginas <= 1) {
+    document.getElementById("paginacao")?.remove();
     return;
   }
-  const filtrados = todosPacientes.filter((p) =>
-    p.nome.toLowerCase().includes(termo.toLowerCase())
-  );
-  renderizarPacientes(filtrados);
+
+  let nav = document.getElementById("paginacao");
+  if (!nav) {
+    nav = document.createElement("div");
+    nav.id = "paginacao";
+    nav.className = "paginacao";
+    document.querySelector(".pacientes-main")?.appendChild(nav);
+  }
+
+  nav.innerHTML = "";
+
+  const btnPrev = document.createElement("button");
+  btnPrev.className = "pag-btn";
+  btnPrev.textContent = "⟨";
+  btnPrev.disabled = paginaAtual <= 1;
+  btnPrev.addEventListener("click", () => {
+    if (paginaAtual > 1) {
+      paginaAtual--;
+      carregarPacientes();
+    }
+  });
+  nav.appendChild(btnPrev);
+
+  const inicio = Math.max(1, paginaAtual - 2);
+  const fim = Math.min(totalPaginas, paginaAtual + 2);
+
+  for (let i = inicio; i <= fim; i++) {
+    const btn = document.createElement("button");
+    btn.className = "pag-btn" + (i === paginaAtual ? " active" : "");
+    btn.textContent = i;
+    btn.addEventListener("click", () => {
+      paginaAtual = i;
+      carregarPacientes();
+    });
+    nav.appendChild(btn);
+  }
+
+  const btnNext = document.createElement("button");
+  btnNext.className = "pag-btn";
+  btnNext.textContent = "⟩";
+  btnNext.disabled = paginaAtual >= totalPaginas;
+  btnNext.addEventListener("click", () => {
+    if (paginaAtual < totalPaginas) {
+      paginaAtual++;
+      carregarPacientes();
+    }
+  });
+  nav.appendChild(btnNext);
+}
+
+function filtrarPacientes(termo) {
+  filtroBusca = termo;
+  paginaAtual = 1;
+  carregarPacientes();
 }

@@ -79,7 +79,7 @@ async function carregarPacientesSemRetorno() {
     item.href = `#paciente-${p.id}`;
     item.innerHTML = `
       <span class="paciente-nome">${p.nome}</span>
-      <span class="paciente-info">Última consulta: ${p.ultima_consulta ? new Date(p.ultima_consulta + "T12:00:00").toLocaleDateString("pt-BR") : "Nenhuma"}</span>
+      <span class="paciente-info">Última consulta: ${p.ultima_consulta ? formatarDataBR(p.ultima_consulta) : "Nenhuma"}</span>
     `;
     item.addEventListener("click", (e) => {
       e.preventDefault();
@@ -87,9 +87,4 @@ async function carregarPacientesSemRetorno() {
     });
     lista.appendChild(item);
   });
-}
-
-async function sair() {
-  await supabaseClient.auth.signOut();
-  window.location.href = "index.html";
 }

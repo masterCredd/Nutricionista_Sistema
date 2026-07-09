@@ -181,7 +181,7 @@ function renderizarGrafico() {
   vazio.style.display = "none";
 
   const sorted = [...consultasData].sort((a, b) => new Date(a.data_consulta) - new Date(b.data_consulta));
-  const labels = sorted.map((c) => new Date(c.data_consulta + "T12:00:00").toLocaleDateString("pt-BR"));
+  const labels = sorted.map((c) => formatarDataBR(c.data_consulta));
   const pesos = sorted.map((c) => c.peso);
 
   if (pesos.every((p) => p == null)) {
@@ -222,6 +222,9 @@ function renderizarGrafico() {
         },
         x: {
           grid: { display: false },
+          adapters: {
+            date: { zone: "America/Sao_Paulo" },
+          },
         },
       },
     },
@@ -242,9 +245,9 @@ function renderizarListaConsultas() {
   vazio.style.display = "none";
 
   consultasData.forEach((c) => {
-    const data = new Date(c.data_consulta + "T12:00:00").toLocaleDateString("pt-BR");
+    const data = formatarDataBR(c.data_consulta);
     const retorno = c.proximo_retorno
-      ? new Date(c.proximo_retorno + "T12:00:00").toLocaleDateString("pt-BR")
+      ? formatarDataBR(c.proximo_retorno)
       : null;
 
     const card = document.createElement("div");
@@ -264,10 +267,6 @@ function renderizarListaConsultas() {
     `;
     lista.appendChild(card);
   });
-}
-
-function getHojeStr() {
-  return new Date().toISOString().split("T")[0];
 }
 
 function abrirModalConsulta() {

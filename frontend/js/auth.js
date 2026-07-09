@@ -17,9 +17,6 @@ async function cadastrar(event) {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirm-password").value;
-  const errorEl = document.getElementById("error-message");
-
-  errorEl.style.display = "none";
 
   if (!nome) {
     exibirErro("Por favor, informe seu nome completo.");
@@ -76,9 +73,6 @@ async function entrar(event) {
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const errorEl = document.getElementById("error-message");
-
-  errorEl.style.display = "none";
 
   if (!email || !password) {
     exibirErro("Preencha todos os campos.");
@@ -101,25 +95,4 @@ async function entrar(event) {
     console.error("Erro inesperado no login:", err);
     exibirErro(obterMensagemErro(err.message || "Erro inesperado. Tente novamente."));
   }
-}
-
-async function sair() {
-  await supabaseClient.auth.signOut();
-  window.location.href = "index.html";
-}
-
-function exibirErro(mensagem) {
-  const errorEl = document.getElementById("error-message");
-  errorEl.textContent = mensagem;
-  errorEl.style.display = "block";
-}
-
-function obterMensagemErro(msg) {
-  const mapa = {
-    "Invalid login credentials": "Email ou senha inválidos.",
-    "Email not confirmed": "Confirme seu email antes de fazer login.",
-    "User already registered": "Este email já está cadastrado.",
-    "Password should be at least 6 characters": "A senha deve ter no mínimo 6 caracteres.",
-  };
-  return mapa[msg] || msg;
 }

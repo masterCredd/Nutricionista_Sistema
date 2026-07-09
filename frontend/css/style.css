@@ -678,18 +678,19 @@ body:not(:has(.layout-dashboard)) {
 
 .lista-vazia {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px 60px;
   color: var(--text-light);
   display: none;
 }
 
-.lista-vazia p {
-  margin-top: 12px;
-  font-size: 15px;
-}
-
 .lista-vazia svg {
   stroke: var(--text-light);
+  margin-bottom: 16px;
+}
+
+.lista-vazia p {
+  margin-bottom: 20px;
+  font-size: 15px;
 }
 
 /* === FORMULÁRIO DE CADASTRO === */
@@ -1296,4 +1297,30 @@ body:not(:has(.layout-dashboard)) {
 .pag-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Botão flutuante de tema (login/cadastro) */
+.theme-float {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s;
+}
+
+.theme-float:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  box-shadow: var(--shadow-lg);
 }

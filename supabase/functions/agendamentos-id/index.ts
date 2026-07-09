@@ -9,8 +9,11 @@ serve(async (req) => {
   if (corsResponse) return corsResponse;
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !supabaseKey) {
+      return errorResponse(503, "SERVICO_INDISPONIVEL", "Serviço temporariamente indisponível.");
+    }
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const url = new URL(req.url);

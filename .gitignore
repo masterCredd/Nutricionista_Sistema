@@ -1,6 +1,22 @@
+# Secrets / credenciais
 .env
+.env.*
+!.env.example
+!.env.staging.example
+*.local
+secrets/
+*.key
+
+# Dependências e build
 node_modules/
 dist/
+
+# Supabase
 supabase/.branches
 supabase/.temp
+
+# Logs
 *.log
+
+# Backups
+backups/

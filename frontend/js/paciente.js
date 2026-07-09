@@ -6,13 +6,21 @@ let planosData = [];
 let chartInstance = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) { window.location.href = "index.html"; return; }
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
+  if (!session) {
+    window.location.href = "index.html";
+    return;
+  }
   currentUser = session.user;
 
   const params = new URLSearchParams(window.location.search);
   pacienteId = params.get("id");
-  if (!pacienteId) { window.location.href = "pacientes.html"; return; }
+  if (!pacienteId) {
+    window.location.href = "pacientes.html";
+    return;
+  }
 
   initTabs();
   await carregarPaciente();
@@ -24,8 +32,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initTabs() {
   document.querySelectorAll(".profile-tabs .tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".profile-tabs .tab-btn").forEach((b) => b.classList.remove("active"));
-      document.querySelectorAll(".profile-tab-content").forEach((c) => c.classList.remove("active"));
+      document
+        .querySelectorAll(".profile-tabs .tab-btn")
+        .forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".profile-tab-content")
+        .forEach((c) => c.classList.remove("active"));
       btn.classList.add("active");
       document.getElementById("tab-" + btn.dataset.profileTab).classList.add("active");
     });
@@ -39,8 +51,14 @@ async function carregarPaciente() {
     .eq("id", pacienteId)
     .single();
 
-  if (error || !data) { window.location.href = "pacientes.html"; return; }
-  if (data.nutricionista_id !== currentUser.id) { window.location.href = "pacientes.html"; return; }
+  if (error || !data) {
+    window.location.href = "pacientes.html";
+    return;
+  }
+  if (data.nutricionista_id !== currentUser.id) {
+    window.location.href = "pacientes.html";
+    return;
+  }
 
   pacienteData = data;
   document.getElementById("profile-nome").textContent = data.nome;
@@ -55,7 +73,8 @@ function preencherTabPessoal(d) {
   document.getElementById("edit-nome").value = d.nome || "";
   document.getElementById("edit-data_nascimento").value = d.data_nascimento || "";
   document.getElementById("edit-idade").value = d.data_nascimento
-    ? Math.floor((new Date() - new Date(d.data_nascimento)) / 31557600000) : "";
+    ? Math.floor((new Date() - new Date(d.data_nascimento)) / 31557600000)
+    : "";
   document.getElementById("edit-sexo").value = d.sexo || "";
   document.getElementById("edit-telefone").value = d.telefone || "";
   document.getElementById("edit-whatsapp").value = d.whatsapp || "";
@@ -67,8 +86,8 @@ function preencherTabClinico(d) {
   document.getElementById("edit-altura").value = d.altura ?? "";
   const peso = parseFloat(d.peso_inicial);
   const altura = parseFloat(d.altura);
-  document.getElementById("edit-imc").value = (peso > 0 && altura > 0)
-    ? (peso / Math.pow(altura / 100, 2)).toFixed(1) : "";
+  document.getElementById("edit-imc").value =
+    peso > 0 && altura > 0 ? (peso / Math.pow(altura / 100, 2)).toFixed(1) : "";
 
   setCheckboxes("edit-objetivos", d.objetivos || []);
   document.getElementById("edit-objetivo_texto").value = d.objetivo_texto || "";
@@ -122,8 +141,12 @@ async function salvarPaciente() {
     telefone: document.getElementById("edit-telefone").value || null,
     whatsapp: document.getElementById("edit-whatsapp").value || null,
     email: document.getElementById("edit-email").value || null,
-    peso_inicial: document.getElementById("edit-peso").value ? parseFloat(document.getElementById("edit-peso").value) : null,
-    altura: document.getElementById("edit-altura").value ? parseFloat(document.getElementById("edit-altura").value) : null,
+    peso_inicial: document.getElementById("edit-peso").value
+      ? parseFloat(document.getElementById("edit-peso").value)
+      : null,
+    altura: document.getElementById("edit-altura").value
+      ? parseFloat(document.getElementById("edit-altura").value)
+      : null,
     objetivos: getEditSelecionados("edit-objetivos"),
     objetivo_texto: document.getElementById("edit-objetivo_texto").value || null,
     nivel_atividade: document.getElementById("edit-nivel_atividade").value || null,
@@ -132,10 +155,14 @@ async function salvarPaciente() {
     alergias: getEditSelecionados("edit-alergias"),
     medicamentos: document.getElementById("edit-medicamentos").value || null,
     suplementos: document.getElementById("edit-suplementos").value || null,
-    refeicoes_por_dia: document.getElementById("edit-refeicoes").value ? parseInt(document.getElementById("edit-refeicoes").value) : null,
+    refeicoes_por_dia: document.getElementById("edit-refeicoes").value
+      ? parseInt(document.getElementById("edit-refeicoes").value)
+      : null,
     horario_acorda: document.getElementById("edit-horario_acorda").value || null,
     horario_dorme: document.getElementById("edit-horario_dorme").value || null,
-    litros_agua: document.getElementById("edit-litros_agua").value ? parseFloat(document.getElementById("edit-litros_agua").value) : null,
+    litros_agua: document.getElementById("edit-litros_agua").value
+      ? parseFloat(document.getElementById("edit-litros_agua").value)
+      : null,
     atividade_fisica: document.getElementById("edit-atividade_sim").checked,
     atividade_fisica_descricao: document.getElementById("edit-atividade_descricao").value || null,
     observacoes: document.getElementById("edit-observacoes").value || null,
@@ -150,7 +177,9 @@ async function salvarPaciente() {
 
   const toast = document.getElementById("toast-success");
   toast.style.display = "block";
-  setTimeout(() => { toast.style.display = "none"; }, 3000);
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
 }
 
 // === CONSULTAS ===
@@ -162,7 +191,10 @@ async function carregarConsultas() {
     .eq("paciente_id", pacienteId)
     .order("data_consulta", { ascending: false });
 
-  if (error) { console.error(error); return; }
+  if (error) {
+    console.error(error);
+    return;
+  }
   consultasData = data || [];
   renderizarGrafico();
   renderizarListaConsultas();
@@ -174,41 +206,53 @@ function renderizarGrafico() {
 
   if (consultasData.length === 0) {
     vazio.style.display = "block";
-    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
     return;
   }
 
   vazio.style.display = "none";
 
-  const sorted = [...consultasData].sort((a, b) => new Date(a.data_consulta) - new Date(b.data_consulta));
+  const sorted = [...consultasData].sort(
+    (a, b) => new Date(a.data_consulta) - new Date(b.data_consulta)
+  );
   const labels = sorted.map((c) => formatarDataBR(c.data_consulta));
   const pesos = sorted.map((c) => c.peso);
 
   if (pesos.every((p) => p == null)) {
     vazio.style.display = "block";
     vazio.textContent = "Nenhum peso registrado nas consultas";
-    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
     return;
   }
 
-  if (chartInstance) { chartInstance.destroy(); }
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
 
   chartInstance = new Chart(ctx, {
     type: "line",
     data: {
       labels,
-      datasets: [{
-        label: "Peso (kg)",
-        data: pesos,
-        borderColor: "#2e7d32",
-        backgroundColor: "rgba(46, 125, 50, 0.08)",
-        borderWidth: 2,
-        pointBackgroundColor: "#2e7d32",
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        fill: true,
-        tension: 0.3,
-      }],
+      datasets: [
+        {
+          label: "Peso (kg)",
+          data: pesos,
+          borderColor: "#2e7d32",
+          backgroundColor: "rgba(46, 125, 50, 0.08)",
+          borderWidth: 2,
+          pointBackgroundColor: "#2e7d32",
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.3,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -246,9 +290,7 @@ function renderizarListaConsultas() {
 
   consultasData.forEach((c) => {
     const data = formatarDataBR(c.data_consulta);
-    const retorno = c.proximo_retorno
-      ? formatarDataBR(c.proximo_retorno)
-      : null;
+    const retorno = c.proximo_retorno ? formatarDataBR(c.proximo_retorno) : null;
 
     const card = document.createElement("div");
     card.className = "consulta-card";
@@ -258,12 +300,12 @@ function renderizarListaConsultas() {
         ${c.peso ? `<span class="consulta-peso">${c.peso} kg</span>` : ""}
       </div>
       <div class="consulta-card-body">
-        ${c.cintura ? `<span>Cintura: ${c.cintura} cm</span>` : ""}
-        ${c.quadril ? `<span>Quadril: ${c.quadril} cm</span>` : ""}
-        ${c.percentual_gordura ? `<span>% Gordura: ${c.percentual_gordura}%</span>` : ""}
-        ${retorno ? `<span class="consulta-retorno">Retorno: ${retorno}</span>` : ""}
+        ${c.cintura ? `<span>Cintura: ${escapeHtml(c.cintura)} cm</span>` : ""}
+        ${c.quadril ? `<span>Quadril: ${escapeHtml(c.quadril)} cm</span>` : ""}
+        ${c.percentual_gordura ? `<span>% Gordura: ${escapeHtml(c.percentual_gordura)}%</span>` : ""}
+        ${retorno ? `<span class="consulta-retorno">Retorno: ${escapeHtml(retorno)}</span>` : ""}
       </div>
-      ${c.observacoes ? `<div class="consulta-obs">${c.observacoes}</div>` : ""}
+      ${c.observacoes ? `<div class="consulta-obs">${escapeHtml(c.observacoes)}</div>` : ""}
     `;
     lista.appendChild(card);
   });
@@ -296,10 +338,18 @@ async function salvarConsulta() {
   const consulta = {
     paciente_id: pacienteId,
     data_consulta: data,
-    peso: document.getElementById("consulta-peso").value ? parseFloat(document.getElementById("consulta-peso").value) : null,
-    cintura: document.getElementById("consulta-cintura").value ? parseFloat(document.getElementById("consulta-cintura").value) : null,
-    quadril: document.getElementById("consulta-quadril").value ? parseFloat(document.getElementById("consulta-quadril").value) : null,
-    percentual_gordura: document.getElementById("consulta-gordura").value ? parseFloat(document.getElementById("consulta-gordura").value) : null,
+    peso: document.getElementById("consulta-peso").value
+      ? parseFloat(document.getElementById("consulta-peso").value)
+      : null,
+    cintura: document.getElementById("consulta-cintura").value
+      ? parseFloat(document.getElementById("consulta-cintura").value)
+      : null,
+    quadril: document.getElementById("consulta-quadril").value
+      ? parseFloat(document.getElementById("consulta-quadril").value)
+      : null,
+    percentual_gordura: document.getElementById("consulta-gordura").value
+      ? parseFloat(document.getElementById("consulta-gordura").value)
+      : null,
     observacoes: document.getElementById("consulta-obs").value || null,
     proximo_retorno: document.getElementById("consulta-retorno").value || null,
   };
@@ -325,7 +375,10 @@ async function carregarPlanos() {
     .eq("paciente_id", pacienteId)
     .order("created_at", { ascending: false });
 
-  if (error) { console.error(error); return; }
+  if (error) {
+    console.error(error);
+    return;
+  }
   planosData = data || [];
   renderizarPlanos();
 }
@@ -353,8 +406,6 @@ function renderizarPlanos() {
   });
 }
 
-
-
 function fecharPlano() {
   document.getElementById("plano-overlay").style.display = "none";
 }
@@ -374,7 +425,9 @@ async function gerarPlano() {
   container.innerHTML = "";
 
   try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const {
+      data: { session },
+    } = await supabaseClient.auth.getSession();
     if (!session) {
       window.location.href = "index.html";
       return;
@@ -384,39 +437,36 @@ async function gerarPlano() {
       throw new Error("Dados do paciente não carregados");
     }
 
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/gerar-plano`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          nome: pacienteData.nome,
-          data_nascimento: pacienteData.data_nascimento,
-          peso_inicial: pacienteData.peso_inicial,
-          altura: pacienteData.altura,
-          objetivos: pacienteData.objetivos,
-          objetivo_texto: pacienteData.objetivo_texto,
-          nivel_atividade: pacienteData.nivel_atividade,
-          patologias: pacienteData.patologias,
-          restricoes_alimentares: pacienteData.restricoes_alimentares,
-          alergias: pacienteData.alergias,
-          refeicoes_por_dia: pacienteData.refeicoes_por_dia,
-          horario_acorda: pacienteData.horario_acorda,
-          horario_dorme: pacienteData.horario_dorme,
-          suplementos: pacienteData.suplementos,
-        }),
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/gerar-plano`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
       },
-    );
+      body: JSON.stringify({
+        nome: pacienteData.nome,
+        data_nascimento: pacienteData.data_nascimento,
+        peso_inicial: pacienteData.peso_inicial,
+        altura: pacienteData.altura,
+        objetivos: pacienteData.objetivos,
+        objetivo_texto: pacienteData.objetivo_texto,
+        nivel_atividade: pacienteData.nivel_atividade,
+        patologias: pacienteData.patologias,
+        restricoes_alimentares: pacienteData.restricoes_alimentares,
+        alergias: pacienteData.alergias,
+        refeicoes_por_dia: pacienteData.refeicoes_por_dia,
+        horario_acorda: pacienteData.horario_acorda,
+        horario_dorme: pacienteData.horario_dorme,
+        suplementos: pacienteData.suplementos,
+      }),
+    });
 
     if (!response.ok) {
       let errMsg = "Erro ao gerar plano com IA.";
       try {
         const err = await response.json();
         errMsg = err.erro || errMsg;
-      } catch (_) { }
+      } catch (_) {}
       throw new Error(errMsg);
     }
 
@@ -452,12 +502,16 @@ function renderizarPlanoGerado(plano) {
     card.innerHTML = `
       <h4 class="refeicao-titulo">${ref.emoji} ${ref.label}</h4>
       <div class="refeicao-opcoes" id="opcoes-${ref.id}">
-        ${opcoes.map((op, i) => `
+        ${opcoes
+          .map(
+            (op, i) => `
           <div class="opcao-item">
             <span class="opcao-numero">${i + 1}</span>
-            <input type="text" class="opcao-input" value="${op.replace(/"/g, "&quot;")}" data-refeicao="${ref.id}" data-index="${i}" />
+            <input type="text" class="opcao-input" value="${escapeHtml(op)}" data-refeicao="${ref.id}" data-index="${i}" />
           </div>
-        `).join("")}
+        `
+          )
+          .join("")}
       </div>
     `;
     container.appendChild(card);
@@ -485,7 +539,7 @@ async function salvarPlano() {
   if (!planoAtual || salvandoPlano) return;
   salvandoPlano = true;
 
-  const btn = document.querySelector('.plano-actions .btn');
+  const btn = document.querySelector(".plano-actions .btn");
   if (btn) {
     btn.disabled = true;
     btn.textContent = "Salvando...";
@@ -513,7 +567,9 @@ async function salvarPlano() {
   const toast = document.getElementById("toast-success");
   toast.textContent = "Plano salvo com sucesso!";
   toast.style.display = "block";
-  setTimeout(() => { toast.style.display = "none"; }, 3000);
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
 
   await carregarPlanos();
 }
@@ -544,12 +600,16 @@ function visualizarPlano(plano) {
       <div class="refeicao-card">
         <h4 class="refeicao-titulo">${ref.emoji} ${ref.label}</h4>
         <div class="refeicao-opcoes">
-          ${opcoes.map((op, i) => `
+          ${opcoes
+            .map(
+              (op, i) => `
             <div class="opcao-item">
               <span class="opcao-numero">${i + 1}</span>
-              <span class="opcao-texto">${op}</span>
+              <span class="opcao-texto">${escapeHtml(op)}</span>
             </div>
-          `).join("")}
+          `
+            )
+            .join("")}
         </div>
       </div>
     `;

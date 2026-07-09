@@ -1,5 +1,7 @@
 async function verificarSessao() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
   if (session) {
     const path = window.location.pathname;
     if (path.endsWith("index.html") || path.endsWith("/") || path.endsWith("cadastro.html")) {
@@ -46,13 +48,11 @@ async function cadastrar(event) {
     }
 
     if (data.user) {
-      const { error: insertError } = await supabaseClient
-        .from("nutricionistas")
-        .insert({
-          id: data.user.id,
-          nome: nome,
-          email: email,
-        });
+      const { error: insertError } = await supabaseClient.from("nutricionistas").insert({
+        id: data.user.id,
+        nome: nome,
+        email: email,
+      });
 
       if (insertError) {
         console.error("Erro ao salvar nutricionista:", insertError);

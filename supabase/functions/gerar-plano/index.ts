@@ -1,11 +1,35 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 function corsHeaders() {
+  const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") || "*";
   return {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    "Vary": "Origin",
   };
+}
+
+async function autenticarUsuario(req: Request): Promise<string | null> {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
+
+  const token = authHeader.slice(7);
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Configuração do servidor incompleta (SUPABASE_URL/SUPABASE_ANON_KEY ausentes).");
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) return null;
+  return data.user.id;
 }
 
 const CATEGORIAS_ALIMENTOS: Record<string, string[]> = {
@@ -191,6 +215,23 @@ serve(async (req) => {
       status: 405,
       headers: { "Content-Type": "application/json", ...corsHeaders() },
     });
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return new Response(
+      JSON.stringify({ erro: "Serviço temporariamente indisponível." }),
+      { status: 503, headers: { "Content-Type": "application/json", ...corsHeaders() } },
+    );
+  }
+
+  const usuarioId = await autenticarUsuario(req);
+  if (!usuarioId) {
+    return new Response(
+      JSON.stringify({ erro: "Não autorizado." }),
+      { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders() } },
+    );
   }
 
   try {

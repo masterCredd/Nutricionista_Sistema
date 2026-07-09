@@ -4,6 +4,25 @@ import { validarAutenticacao, AuthError } from "../_shared/auth.ts";
 import { calcularSlotsDisponiveis, sugerirSlots, SlotError } from "../_shared/slots.ts";
 import { errorResponse, successResponse, handleCors } from "../_shared/errors.ts";
 
+const LIMITE_NOME_LEAD = 150;
+const LIMITE_WHATSAPP = 20;
+const LIMITE_OBSERVACOES = 500;
+
+function limparTexto(valor: unknown, limite: number): string | null {
+  if (valor === null || valor === undefined) return null;
+  const texto = String(valor).trim();
+  if (texto === "") return null;
+  return texto.slice(0, limite);
+}
+
+function validarWhatsapp(valor: string | null): string | null {
+  if (!valor) return null;
+  if (!/^[0-9+()\-\s]{8,20}$/.test(valor)) {
+    throw new SlotError(422, "WHATSAPP_INVALIDO", "Whatsapp contém caracteres inválidos ou excede o tamanho permitido.");
+  }
+  return valor;
+}
+
 serve(async (req) => {
   const corsResponse = handleCors(req);
   if (corsResponse) return corsResponse;
@@ -13,8 +32,11 @@ serve(async (req) => {
       return errorResponse(405, "METODO_NAO_PERMITIDO", "Método não permitido.");
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !supabaseKey) {
+      return errorResponse(503, "SERVICO_INDISPONIVEL", "Serviço temporariamente indisponível.");
+    }
     const body = await req.json();
     const { agenda_id, procedimento_id, nome_lead, whatsapp_lead, data, hora, observacoes } = body;
 
@@ -65,17 +87,21 @@ serve(async (req) => {
       return errorResponse(409, "HORARIO_OCUPADO", "O horário solicitado não está disponível.", { sugestoes });
     }
 
+    const nomeLead = limparTexto(nome_lead, LIMITE_NOME_LEAD);
+    const whatsappLead = validarWhatsapp(limparTexto(whatsapp_lead, LIMITE_WHATSAPP));
+    const obs = limparTexto(observacoes, LIMITE_OBSERVACOES);
+
     const { data: agendamento, error: insertError } = await supabase
       .from("agendamentos")
       .insert({
         agenda_id,
         procedimento_id,
-        nome_lead: nome_lead || null,
-        whatsapp_lead: whatsapp_lead || null,
+        nome_lead: nomeLead,
+        whatsapp_lead: whatsappLead,
         data_hora_inicio: slotDisponivel.data_hora_inicio,
         data_hora_fim: slotDisponivel.data_hora_fim,
         status: "agendado",
-        observacoes: observacoes || null,
+        observacoes: obs,
       })
       .select()
       .single();

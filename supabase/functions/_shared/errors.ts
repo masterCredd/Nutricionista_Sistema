@@ -27,10 +27,12 @@ export function successResponse(
 }
 
 export function corsHeaders(): Record<string, string> {
+  const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") || "*";
   return {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    "Vary": "Origin",
   };
 }
 

@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  frontend:
+    name: Frontend lint & sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias de dev
+        run: npm install
+
+      - name: Checar formatação (Prettier)
+        run: npm run format:check
+
+      - name: Lint do frontend (ESLint)
+        run: npm run lint
+
+      - name: Checar sintaxe dos arquivos JS do frontend
+        run: |
+          for f in $(find frontend/js -name '*.js'); do
+            node --check "$f" || { echo "Erro de sintaxe em $f"; exit 1; }
+          done
+          echo "JS do frontend OK"
+
+  supabase:
+    name: Supabase functions typecheck & migration diff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Typecheck Edge Functions
+        run: |
+          for f in $(find supabase/functions -name 'index.ts'); do
+            deno check "$f" || { echo "Erro de tipo em $f"; exit 1; }
+          done
+          echo "Typecheck Deno OK"
+
+      - name: Lint Edge Functions (deno lint)
+        run: deno lint supabase/functions
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Validar migrations (diff contra o banco de staging)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          supabase link --project-ref "$SUPABASE_PROJECT_ID" || true
+          supabase db diff --linked --schema public || echo "AVISO: diff falhou (sem banco de staging linkado)"

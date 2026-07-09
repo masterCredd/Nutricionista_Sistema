@@ -1,8 +1,13 @@
 let currentUser = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) { window.location.href = "index.html"; return; }
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
+  if (!session) {
+    window.location.href = "index.html";
+    return;
+  }
   currentUser = session.user;
 
   document.querySelectorAll(".tab-btn").forEach((btn) => {
@@ -83,8 +88,12 @@ async function salvarPaciente(event) {
     telefone: document.getElementById("telefone").value || null,
     whatsapp: document.getElementById("whatsapp").value || null,
     email: document.getElementById("email").value || null,
-    peso_inicial: document.getElementById("peso").value ? parseFloat(document.getElementById("peso").value) : null,
-    altura: document.getElementById("altura").value ? parseFloat(document.getElementById("altura").value) : null,
+    peso_inicial: document.getElementById("peso").value
+      ? parseFloat(document.getElementById("peso").value)
+      : null,
+    altura: document.getElementById("altura").value
+      ? parseFloat(document.getElementById("altura").value)
+      : null,
     objetivos: getSelecionados("objetivos"),
     objetivo_texto: document.getElementById("objetivo_texto").value || null,
     nivel_atividade: document.getElementById("nivel_atividade").value || null,
@@ -101,7 +110,8 @@ async function salvarPaciente(event) {
     litros_agua: document.getElementById("litros_agua").value
       ? parseFloat(document.getElementById("litros_agua").value)
       : null,
-    atividade_fisica: document.querySelector('input[name="atividade_fisica"]:checked')?.value === "true" || false,
+    atividade_fisica:
+      document.querySelector('input[name="atividade_fisica"]:checked')?.value === "true" || false,
     atividade_fisica_descricao: document.getElementById("atividade_fisica_descricao").value || null,
     observacoes: document.getElementById("observacoes").value || null,
   };

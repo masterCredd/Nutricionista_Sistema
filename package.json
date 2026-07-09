@@ -1,0 +1,18 @@
+{
+  "name": "nutrisystem-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend do NutriSystem (HTML/CSS/JS puro) com lint e formatação",
+  "scripts": {
+    "lint": "eslint frontend/js",
+    "format": "prettier --write \"frontend/**/*.{js,html,css}\"",
+    "format:check": "prettier --check \"frontend/**/*.{js,html,css}\"",
+    "smoke": "node scripts/test-smoke.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "prettier": "^3.0.0"
+  }
+}

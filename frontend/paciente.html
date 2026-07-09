@@ -1,252 +1,474 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NutriSystem — Paciente</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-  <div class="layout-dashboard">
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <h1>Nutri<span>System</span></h1>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="dashboard.html" class="nav-item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          Dashboard
-        </a>
-        <a href="pacientes.html" class="nav-item active">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Pacientes
-        </a>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="btn-sidebar-theme"></button>
-        <button class="btn-sidebar-sair" onclick="sair()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Sair
-        </button>
-      </div>
-    </aside>
-
-    <main class="main-content">
-      <header class="main-header profile-header">
-        <div>
-          <a href="pacientes.html" class="profile-back">&larr; Pacientes</a>
-          <h2 id="profile-nome">Carregando...</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriSystem — Paciente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="layout-dashboard">
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <h1>Nutri<span>System</span></h1>
         </div>
-      </header>
-
-      <!-- TOAST -->
-      <div id="toast-success" class="toast">Dados salvos com sucesso!</div>
-
-      <!-- SEÇÃO 1 — DADOS DO PACIENTE -->
-      <section class="profile-section">
-        <h3 class="section-title">Dados do Paciente</h3>
-
-        <div class="profile-tabs">
-          <button class="tab-btn active" data-profile-tab="edit-pessoal">Pessoal</button>
-          <button class="tab-btn" data-profile-tab="edit-clinico">Clínico</button>
-          <button class="tab-btn" data-profile-tab="edit-habitos">Hábitos</button>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+            </svg>
+            Dashboard
+          </a>
+          <a href="pacientes.html" class="nav-item active">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Pacientes
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn-sidebar-theme"></button>
+          <button class="btn-sidebar-sair" onclick="sair()">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Sair
+          </button>
         </div>
+      </aside>
 
-        <!-- EDIT: Pessoal -->
-        <div class="profile-tab-content active" id="tab-edit-pessoal">
-          <div class="form-row">
-            <div class="form-group full">
-              <label>Nome completo</label>
-              <input type="text" id="edit-nome" />
-            </div>
+      <main class="main-content">
+        <header class="main-header profile-header">
+          <div>
+            <a href="pacientes.html" class="profile-back">&larr; Pacientes</a>
+            <h2 id="profile-nome">Carregando...</h2>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Data de nascimento</label><input type="date" id="edit-data_nascimento" onchange="document.getElementById('edit-idade').value = this.value ? Math.floor((new Date() - new Date(this.value)) / 31557600000) : ''" /></div>
-            <div class="form-group"><label>Idade</label><input type="text" id="edit-idade" readonly /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Sexo</label><select id="edit-sexo"><option value="">Selecione</option><option value="Feminino">Feminino</option><option value="Masculino">Masculino</option><option value="Outro">Outro</option></select></div>
-            <div class="form-group"><label>Telefone</label><input type="tel" id="edit-telefone" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>WhatsApp</label><input type="tel" id="edit-whatsapp" /></div>
-            <div class="form-group"><label>Email</label><input type="email" id="edit-email" /></div>
-          </div>
-        </div>
+        </header>
 
-        <!-- EDIT: Clínico -->
-        <div class="profile-tab-content" id="tab-edit-clinico">
-          <div class="form-row">
-            <div class="form-group"><label>Peso <small>(kg)</small></label><input type="number" id="edit-peso" step="0.1" /></div>
-            <div class="form-group"><label>Altura <small>(cm)</small></label><input type="number" id="edit-altura" step="0.1" /></div>
-            <div class="form-group"><label>IMC</label><input type="text" id="edit-imc" readonly /></div>
-          </div>
-          <div class="form-group full">
-            <label>Objetivo</label>
-            <div class="check-grid">
-              <label><input type="checkbox" name="edit-objetivos" value="Emagrecer" /> Emagrecer</label>
-              <label><input type="checkbox" name="edit-objetivos" value="Ganhar massa" /> Ganhar massa</label>
-              <label><input type="checkbox" name="edit-objetivos" value="Controlar diabetes" /> Controlar diabetes</label>
-              <label><input type="checkbox" name="edit-objetivos" value="Saúde geral" /> Saúde geral</label>
-              <label><input type="checkbox" name="edit-objetivos" value="Performance esportiva" /> Performance esportiva</label>
-              <label><input type="checkbox" name="edit-objetivos" value="Reeducação alimentar" /> Reeducação alimentar</label>
-            </div>
-            <input type="text" id="edit-objetivo_texto" placeholder="Outro objetivo..." style="margin-top:8px" />
-          </div>
-          <div class="form-group full">
-            <label>Nível de atividade física</label>
-            <select id="edit-nivel_atividade">
-              <option value="">Selecione</option>
-              <option value="Sedentário">Sedentário</option>
-              <option value="Levemente ativo">Levemente ativo</option>
-              <option value="Moderadamente ativo">Moderadamente ativo</option>
-              <option value="Muito ativo">Muito ativo</option>
-              <option value="Extremamente ativo">Extremamente ativo</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Patologias</label>
-            <div class="check-grid">
-              <label><input type="checkbox" name="edit-patologias" value="Diabetes" /> Diabetes</label>
-              <label><input type="checkbox" name="edit-patologias" value="Hipertensão" /> Hipertensão</label>
-              <label><input type="checkbox" name="edit-patologias" value="Hipotireoidismo" /> Hipotireoidismo</label>
-              <label><input type="checkbox" name="edit-patologias" value="Hipertireoidismo" /> Hipertireoidismo</label>
-              <label><input type="checkbox" name="edit-patologias" value="SOP" /> SOP</label>
-              <label><input type="checkbox" name="edit-patologias" value="Doença celíaca" /> Doença celíaca</label>
-              <label><input type="checkbox" name="edit-patologias" value="Colesterol alto" /> Colesterol alto</label>
-              <label><input type="checkbox" name="edit-patologias" value="nenhum" /> Nenhum</label>
-            </div>
-          </div>
-          <div class="form-group full">
-            <label>Restrições alimentares</label>
-            <div class="check-grid">
-              <label><input type="checkbox" name="edit-restricoes" value="Lactose" /> Lactose</label>
-              <label><input type="checkbox" name="edit-restricoes" value="Glúten" /> Glúten</label>
-              <label><input type="checkbox" name="edit-restricoes" value="Açúcar" /> Açúcar</label>
-              <label><input type="checkbox" name="edit-restricoes" value="Carne vermelha" /> Carne vermelha</label>
-              <label><input type="checkbox" name="edit-restricoes" value="Frutos do mar" /> Frutos do mar</label>
-              <label><input type="checkbox" name="edit-restricoes" value="nenhum" /> Nenhum</label>
-            </div>
-          </div>
-          <div class="form-group full">
-            <label>Alergias</label>
-            <div class="check-grid">
-              <label><input type="checkbox" name="edit-alergias" value="Amendoim" /> Amendoim</label>
-              <label><input type="checkbox" name="edit-alergias" value="Leite" /> Leite</label>
-              <label><input type="checkbox" name="edit-alergias" value="Ovo" /> Ovo</label>
-              <label><input type="checkbox" name="edit-alergias" value="Soja" /> Soja</label>
-              <label><input type="checkbox" name="edit-alergias" value="Trigo" /> Trigo</label>
-              <label><input type="checkbox" name="edit-alergias" value="Frutos do mar" /> Frutos do mar</label>
-              <label><input type="checkbox" name="edit-alergias" value="nenhum" /> Nenhum</label>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Medicamentos</label><textarea id="edit-medicamentos" rows="2"></textarea></div>
-            <div class="form-group"><label>Suplementos</label><textarea id="edit-suplementos" rows="2"></textarea></div>
-          </div>
-        </div>
+        <!-- TOAST -->
+        <div id="toast-success" class="toast">Dados salvos com sucesso!</div>
 
-        <!-- EDIT: Hábitos -->
-        <div class="profile-tab-content" id="tab-edit-habitos">
-          <div class="form-row">
-            <div class="form-group"><label>Refeições/dia</label><input type="number" id="edit-refeicoes" /></div>
-            <div class="form-group"><label>Acorda</label><input type="text" id="edit-horario_acorda" placeholder="Ex: 6 → 06:00" /></div>
-            <div class="form-group"><label>Dorme</label><input type="text" id="edit-horario_dorme" placeholder="Ex: 23 → 23:00" /></div>
+        <!-- SEÇÃO 1 — DADOS DO PACIENTE -->
+        <section class="profile-section">
+          <h3 class="section-title">Dados do Paciente</h3>
+
+          <div class="profile-tabs">
+            <button class="tab-btn active" data-profile-tab="edit-pessoal">Pessoal</button>
+            <button class="tab-btn" data-profile-tab="edit-clinico">Clínico</button>
+            <button class="tab-btn" data-profile-tab="edit-habitos">Hábitos</button>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Água <small>(L)</small></label><input type="number" id="edit-litros_agua" step="0.1" /></div>
-            <div class="form-group">
-              <label>Atividade física?</label>
-              <div class="radio-group">
-                <label><input type="radio" name="edit-atividade" id="edit-atividade_sim" value="true" onchange="document.getElementById('edit-atividade_descricao_container').style.display='block'" /> Sim</label>
-                <label><input type="radio" name="edit-atividade" id="edit-atividade_nao" value="false" onchange="document.getElementById('edit-atividade_descricao_container').style.display='none'" /> Não</label>
+
+          <!-- EDIT: Pessoal -->
+          <div class="profile-tab-content active" id="tab-edit-pessoal">
+            <div class="form-row">
+              <div class="form-group full">
+                <label>Nome completo</label>
+                <input type="text" id="edit-nome" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Data de nascimento</label
+                ><input
+                  type="date"
+                  id="edit-data_nascimento"
+                  onchange="
+                    document.getElementById('edit-idade').value = this.value
+                      ? Math.floor((new Date() - new Date(this.value)) / 31557600000)
+                      : ''
+                  "
+                />
+              </div>
+              <div class="form-group">
+                <label>Idade</label><input type="text" id="edit-idade" readonly />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Sexo</label
+                ><select id="edit-sexo">
+                  <option value="">Selecione</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Telefone</label><input type="tel" id="edit-telefone" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>WhatsApp</label><input type="tel" id="edit-whatsapp" />
+              </div>
+              <div class="form-group">
+                <label>Email</label><input type="email" id="edit-email" />
               </div>
             </div>
           </div>
-          <div class="form-group full" id="edit-atividade_descricao_container" style="display:none">
-            <label>Qual atividade?</label>
-            <textarea id="edit-atividade_descricao" rows="2"></textarea>
+
+          <!-- EDIT: Clínico -->
+          <div class="profile-tab-content" id="tab-edit-clinico">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Peso <small>(kg)</small></label
+                ><input type="number" id="edit-peso" step="0.1" />
+              </div>
+              <div class="form-group">
+                <label>Altura <small>(cm)</small></label
+                ><input type="number" id="edit-altura" step="0.1" />
+              </div>
+              <div class="form-group">
+                <label>IMC</label><input type="text" id="edit-imc" readonly />
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>Objetivo</label>
+              <div class="check-grid">
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Emagrecer" />
+                  Emagrecer</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Ganhar massa" /> Ganhar
+                  massa</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Controlar diabetes" />
+                  Controlar diabetes</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Saúde geral" /> Saúde
+                  geral</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Performance esportiva" />
+                  Performance esportiva</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-objetivos" value="Reeducação alimentar" />
+                  Reeducação alimentar</label
+                >
+              </div>
+              <input
+                type="text"
+                id="edit-objetivo_texto"
+                placeholder="Outro objetivo..."
+                style="margin-top: 8px"
+              />
+            </div>
+            <div class="form-group full">
+              <label>Nível de atividade física</label>
+              <select id="edit-nivel_atividade">
+                <option value="">Selecione</option>
+                <option value="Sedentário">Sedentário</option>
+                <option value="Levemente ativo">Levemente ativo</option>
+                <option value="Moderadamente ativo">Moderadamente ativo</option>
+                <option value="Muito ativo">Muito ativo</option>
+                <option value="Extremamente ativo">Extremamente ativo</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Patologias</label>
+              <div class="check-grid">
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Diabetes" /> Diabetes</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Hipertensão" />
+                  Hipertensão</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Hipotireoidismo" />
+                  Hipotireoidismo</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Hipertireoidismo" />
+                  Hipertireoidismo</label
+                >
+                <label><input type="checkbox" name="edit-patologias" value="SOP" /> SOP</label>
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Doença celíaca" /> Doença
+                  celíaca</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="Colesterol alto" />
+                  Colesterol alto</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-patologias" value="nenhum" /> Nenhum</label
+                >
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>Restrições alimentares</label>
+              <div class="check-grid">
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="Lactose" /> Lactose</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="Glúten" /> Glúten</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="Açúcar" /> Açúcar</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="Carne vermelha" /> Carne
+                  vermelha</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="Frutos do mar" /> Frutos do
+                  mar</label
+                >
+                <label
+                  ><input type="checkbox" name="edit-restricoes" value="nenhum" /> Nenhum</label
+                >
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>Alergias</label>
+              <div class="check-grid">
+                <label
+                  ><input type="checkbox" name="edit-alergias" value="Amendoim" /> Amendoim</label
+                >
+                <label><input type="checkbox" name="edit-alergias" value="Leite" /> Leite</label>
+                <label><input type="checkbox" name="edit-alergias" value="Ovo" /> Ovo</label>
+                <label><input type="checkbox" name="edit-alergias" value="Soja" /> Soja</label>
+                <label><input type="checkbox" name="edit-alergias" value="Trigo" /> Trigo</label>
+                <label
+                  ><input type="checkbox" name="edit-alergias" value="Frutos do mar" /> Frutos do
+                  mar</label
+                >
+                <label><input type="checkbox" name="edit-alergias" value="nenhum" /> Nenhum</label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Medicamentos</label><textarea id="edit-medicamentos" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Suplementos</label><textarea id="edit-suplementos" rows="2"></textarea>
+              </div>
+            </div>
           </div>
-          <div class="form-group full"><label>Observações</label><textarea id="edit-observacoes" rows="3"></textarea></div>
+
+          <!-- EDIT: Hábitos -->
+          <div class="profile-tab-content" id="tab-edit-habitos">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Refeições/dia</label><input type="number" id="edit-refeicoes" />
+              </div>
+              <div class="form-group">
+                <label>Acorda</label
+                ><input type="text" id="edit-horario_acorda" placeholder="Ex: 6 → 06:00" />
+              </div>
+              <div class="form-group">
+                <label>Dorme</label
+                ><input type="text" id="edit-horario_dorme" placeholder="Ex: 23 → 23:00" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Água <small>(L)</small></label
+                ><input type="number" id="edit-litros_agua" step="0.1" />
+              </div>
+              <div class="form-group">
+                <label>Atividade física?</label>
+                <div class="radio-group">
+                  <label
+                    ><input
+                      type="radio"
+                      name="edit-atividade"
+                      id="edit-atividade_sim"
+                      value="true"
+                      onchange="
+                        document.getElementById(
+                          'edit-atividade_descricao_container'
+                        ).style.display = 'block'
+                      "
+                    />
+                    Sim</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      name="edit-atividade"
+                      id="edit-atividade_nao"
+                      value="false"
+                      onchange="
+                        document.getElementById(
+                          'edit-atividade_descricao_container'
+                        ).style.display = 'none'
+                      "
+                    />
+                    Não</label
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="form-group full"
+              id="edit-atividade_descricao_container"
+              style="display: none"
+            >
+              <label>Qual atividade?</label>
+              <textarea id="edit-atividade_descricao" rows="2"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Observações</label><textarea id="edit-observacoes" rows="3"></textarea>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary"
+            style="width: auto; padding: 10px 28px; margin-top: 16px"
+            onclick="salvarPaciente()"
+          >
+            Salvar alterações
+          </button>
+        </section>
+
+        <!-- SEÇÃO 2 — CONSULTAS -->
+        <section class="profile-section">
+          <div class="section-header">
+            <h3 class="section-title">Consultas</h3>
+            <button
+              class="btn btn-primary"
+              style="width: auto; padding: 10px 24px; font-size: 14px"
+              onclick="abrirModalConsulta()"
+            >
+              + Nova Consulta
+            </button>
+          </div>
+
+          <div class="grafico-wrapper">
+            <div class="grafico-vazio" id="grafico-vazio">Nenhuma consulta registrada ainda</div>
+            <canvas id="grafico-peso" height="250"></canvas>
+          </div>
+
+          <div class="consultas-vazio" id="consultas-vazio">Nenhuma consulta registrada ainda</div>
+          <div class="consultas-lista" id="consultas-lista"></div>
+        </section>
+
+        <!-- SEÇÃO 3 — PLANOS ALIMENTARES -->
+        <section class="profile-section">
+          <div class="section-header">
+            <h3 class="section-title">Planos Alimentares</h3>
+            <button
+              id="btn-gerar-plano"
+              class="btn btn-primary"
+              style="width: auto; padding: 10px 24px; font-size: 14px"
+            >
+              + Gerar Plano Alimentar
+            </button>
+          </div>
+
+          <div class="plano-loading" id="plano-loading">
+            <div class="spinner"></div>
+            <span>Gerando plano alimentar com IA...</span>
+          </div>
+
+          <div class="plano-gerado" id="plano-gerado"></div>
+
+          <div class="planos-vazio" id="planos-vazio">Nenhum plano alimentar gerado ainda</div>
+          <div class="planos-historico" id="planos-historico"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL — Nova Consulta -->
+    <div class="modal-overlay" id="modal-consulta">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Nova Consulta</h3>
+          <button class="modal-close" onclick="fecharModalConsulta()">&times;</button>
         </div>
-
-        <button class="btn btn-primary" style="width:auto;padding:10px 28px;margin-top:16px" onclick="salvarPaciente()">Salvar alterações</button>
-      </section>
-
-      <!-- SEÇÃO 2 — CONSULTAS -->
-      <section class="profile-section">
-        <div class="section-header">
-          <h3 class="section-title">Consultas</h3>
-          <button class="btn btn-primary" style="width:auto;padding:10px 24px;font-size:14px" onclick="abrirModalConsulta()">+ Nova Consulta</button>
+        <div class="modal-erro" id="modal-erro"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data da consulta</label><input type="date" id="consulta-data" />
+          </div>
+          <div class="form-group">
+            <label>Peso <small>(kg)</small></label
+            ><input type="number" id="consulta-peso" step="0.1" />
+          </div>
         </div>
-
-        <div class="grafico-wrapper">
-          <div class="grafico-vazio" id="grafico-vazio">Nenhuma consulta registrada ainda</div>
-          <canvas id="grafico-peso" height="250"></canvas>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cintura <small>(cm)</small></label
+            ><input type="number" id="consulta-cintura" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label>Quadril <small>(cm)</small></label
+            ><input type="number" id="consulta-quadril" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label>% Gordura</label><input type="number" id="consulta-gordura" step="0.1" />
+          </div>
         </div>
-
-        <div class="consultas-vazio" id="consultas-vazio">Nenhuma consulta registrada ainda</div>
-        <div class="consultas-lista" id="consultas-lista"></div>
-      </section>
-
-      <!-- SEÇÃO 3 — PLANOS ALIMENTARES -->
-      <section class="profile-section">
-        <div class="section-header">
-          <h3 class="section-title">Planos Alimentares</h3>
-          <button id="btn-gerar-plano" class="btn btn-primary" style="width:auto;padding:10px 24px;font-size:14px">+ Gerar Plano Alimentar</button>
+        <div class="form-group full">
+          <label>Observações</label><textarea id="consulta-obs" rows="2"></textarea>
         </div>
-
-        <div class="plano-loading" id="plano-loading">
-          <div class="spinner"></div>
-          <span>Gerando plano alimentar com IA...</span>
+        <div class="form-group full">
+          <label>Próximo retorno</label><input type="date" id="consulta-retorno" />
         </div>
-
-        <div class="plano-gerado" id="plano-gerado"></div>
-
-        <div class="planos-vazio" id="planos-vazio">Nenhum plano alimentar gerado ainda</div>
-        <div class="planos-historico" id="planos-historico"></div>
-      </section>
-    </main>
-  </div>
-
-  <!-- MODAL — Nova Consulta -->
-  <div class="modal-overlay" id="modal-consulta">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Nova Consulta</h3>
-        <button class="modal-close" onclick="fecharModalConsulta()">&times;</button>
-      </div>
-      <div class="modal-erro" id="modal-erro"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Data da consulta</label><input type="date" id="consulta-data" /></div>
-        <div class="form-group"><label>Peso <small>(kg)</small></label><input type="number" id="consulta-peso" step="0.1" /></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Cintura <small>(cm)</small></label><input type="number" id="consulta-cintura" step="0.1" /></div>
-        <div class="form-group"><label>Quadril <small>(cm)</small></label><input type="number" id="consulta-quadril" step="0.1" /></div>
-        <div class="form-group"><label>% Gordura</label><input type="number" id="consulta-gordura" step="0.1" /></div>
-      </div>
-      <div class="form-group full"><label>Observações</label><textarea id="consulta-obs" rows="2"></textarea></div>
-      <div class="form-group full"><label>Próximo retorno</label><input type="date" id="consulta-retorno" /></div>
-      <div class="form-actions" style="border:none;margin-top:16px;padding-top:0">
-        <button class="btn btn-outline" onclick="fecharModalConsulta()">Cancelar</button>
-        <button class="btn btn-primary" style="width:auto;padding:10px 28px" onclick="salvarConsulta()">Salvar consulta</button>
+        <div class="form-actions" style="border: none; margin-top: 16px; padding-top: 0">
+          <button class="btn btn-outline" onclick="fecharModalConsulta()">Cancelar</button>
+          <button
+            class="btn btn-primary"
+            style="width: auto; padding: 10px 28px"
+            onclick="salvarConsulta()"
+          >
+            Salvar consulta
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- OVERLAY — Visualizar Plano -->
-  <div class="modal-overlay" id="plano-overlay">
-    <div class="modal-content modal-wide" id="plano-content"></div>
-  </div>
+    <!-- OVERLAY — Visualizar Plano -->
+    <div class="modal-overlay" id="plano-overlay">
+      <div class="modal-content modal-wide" id="plano-content"></div>
+    </div>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/tema.js"></script>
-  <script src="js/paciente.js"></script>
-</body>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/tema.js"></script>
+    <script src="js/paciente.js"></script>
+  </body>
 </html>

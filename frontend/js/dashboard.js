@@ -1,7 +1,9 @@
 let currentUser = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = "index.html";
     return;
@@ -78,8 +80,8 @@ async function carregarPacientesSemRetorno() {
     item.className = "paciente-item";
     item.href = `#paciente-${p.id}`;
     item.innerHTML = `
-      <span class="paciente-nome">${p.nome}</span>
-      <span class="paciente-info">Última consulta: ${p.ultima_consulta ? formatarDataBR(p.ultima_consulta) : "Nenhuma"}</span>
+      <span class="paciente-nome">${escapeHtml(p.nome)}</span>
+      <span class="paciente-info">Última consulta: ${p.ultima_consulta ? escapeHtml(formatarDataBR(p.ultima_consulta)) : "Nenhuma"}</span>
     `;
     item.addEventListener("click", (e) => {
       e.preventDefault();
